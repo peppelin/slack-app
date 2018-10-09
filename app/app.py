@@ -19,7 +19,7 @@ def hello_name():
     handler helper function to route events to our Bot.
 """
 def hears():
-    slack_event = json.loads(request.data.decode('utf-8'))
+    slack_event = request.get_json()
     # ============= Slack URL Verification ============ #
     # In order to verify the url of our endpoint, Slack will send a challenge
     # token in a request and check for this token in the response our endpoint
