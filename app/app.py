@@ -14,10 +14,11 @@ def hello_name():
 
 
 @app.route('/listening', methods=['POST'])
-"""
-    This route listens for incoming events from Slack and uses the event
-    handler helper function to route events to our Bot.
-"""
+# ================================================= #
+#    This route listens for incoming events from Slack and uses the event
+#    handler helper function to route events to our Bot.
+# ================================================= #
+
 def hears():
     slack_event = request.get_json()
     # ============= Slack URL Verification ============ #
@@ -25,6 +26,7 @@ def hears():
     # token in a request and check for this token in the response our endpoint
     # sends back.
     #       For more info: https://api.slack.com/events/url_verification
+    # ================================================= #
     if "challenge" in slack_event:
         return make_response(slack_event["challenge"], 200, {"content_type":"application/json"})
 
