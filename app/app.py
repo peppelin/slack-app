@@ -12,6 +12,22 @@ def hello_name():
     text = request.form["text"]
     return "*" + text + "*"
 
+
+@app.route('/listening', methods=['POST'])
+"""
+    This route listens for incoming events from Slack and uses the event
+    handler helper function to route events to our Bot.
+"""
+def hears():
+    slack_event = json.loads(request.data.decode('utf-8'))
+    # ============= Slack URL Verification ============ #
+    # In order to verify the url of our endpoint, Slack will send a challenge
+    # token in a request and check for this token in the response our endpoint
+    # sends back.
+    #       For more info: https://api.slack.com/events/url_verification
+    if "challenge" in slack_event:
+        return make_response(slack_event["challenge"], 200, {"content_type":"application/json"})
+
 @app.route('/test', methods=['POST'])
 def send_button():
     payload = {
