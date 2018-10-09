@@ -1,0 +1,8 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+        - SLACK_URL=$SLACK_URL
+    ports:
+     - "5000:5000"

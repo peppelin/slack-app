@@ -3,8 +3,6 @@
 
 Small [Flask](http://flask.pocoo.org/) application built in dokcer and integrated in Slack. Using slash commands, you can query the API and request stuff.
 
-![](resources/header.png)
-
 ## Requeriments
 * Docker
 * Docker compose
@@ -27,7 +25,7 @@ docker-compose up -d
 .
 ├── app
 │   ├── app.py
-│   ├── requirements.txt
+│   └── requirements.txt
 ├── docker-compose.yml
 ├── Dockerfile
 └── README.md
@@ -40,9 +38,10 @@ In the app folder, you'll find the main python scripts to run Flask API and the 
 
 ## Usage example
 
-Right now, you can run the */hi* slash command and append a text to get it back un bold.
+Configure the slash commands [here](https://api.slack.com/slash-commands)
 
-![](images/slash.gif)
+* */message* endpoint: gets the text and returns it in *bold*.
+* */test* endpoint: send a basic button message.
 
 ## Development setup
 
@@ -73,6 +72,7 @@ Joan Gargallo – [@peppelin](https://twitter.com/peppelin) – peppelin@gmail.c
 * [Docker](https://www.docker.com/)
 * [Slack slach commands](https://api.slack.com/slash-commands)
 * [Slack apps](https://api.slack.com/slack-apps)
+* [Slack bot tutorial](https://github.com/slackapi/Slack-Python-Onboarding-Tutorial)
 * [Flask API](http://flask.pocoo.org/docs/1.0/api/)
 * [Flask tutorial](https://www.patricksoftwareblog.com/steps-for-starting-a-new-flask-project-using-python3/)
 
