@@ -3,7 +3,7 @@
 
 Small [Flask](http://flask.pocoo.org/) application built in docker and integrated in Slack. Using slash commands, you can query the API and request stuff.
 
-## Requeriments
+## Requirements
 * Docker
 * Docker compose
 * Flask
@@ -41,13 +41,14 @@ In the app folder, you'll find the main python scripts to run Flask API and the 
 Configure the slash commands [here](https://api.slack.com/slash-commands)
 
 * **/message** endpoint: gets the text and returns it in *bold*.
+* **/command** endpoint: launches a command passed as an argument.
 * **/test** endpoint: send a basic button message.
 * **/listening** endpoint: gather the challenge when subscribing to events. [Event subscription](https://api.slack.com/events/url_verification)
 
 ## Development setup
 
 Be sure to have installed docker and docker-compose.
-The images python:alpine are being used for builfing the app.
+The images python:alpine are being used for building the app.
 
 ## Release History
 

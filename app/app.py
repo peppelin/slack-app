@@ -1,16 +1,38 @@
 from flask import Flask, request, jsonify
-import os
+import subprocess
 
 app = Flask(__name__)
+
+
+# List of channels allowed to run commands
+allowed_channels = {'test'}
+
+
+#Checks
+def granted_channel(channel):
+    return channel in allowed_channels
 
 @app.route('/')
 def hello():
     return "Hello World!"
 
+
 @app.route('/message', methods=['POST'])
 def hello_name():
-    text = request.form["text"]
-    return "*" + text + "*"
+    text = request.form['text']
+    return 'Now it\'s bold! *' + text + '*'
+
+
+@app.route('/command', methods=['POST'])
+def execute_command():
+    slack_event = request.form
+    if granted_channel(slack_event['channel_name']):
+        command = request.form['text']
+        process = subprocess.Popen(['ls', command], stdout=subprocess.PIPE, universal_newlines=True)
+        output = process.stdout.readline()
+        return '*' + output + '*'
+    else:
+        return 'You are not allowed to launch that command'
 
 
 @app.route('/listening', methods=['POST'])
@@ -18,7 +40,6 @@ def hello_name():
 #    This route listens for incoming events from Slack and uses the event
 #    handler helper function to route events to our Bot.
 # ================================================= #
-
 def hears():
     slack_event = request.get_json()
     # ============= Slack URL Verification ============ #
@@ -28,49 +49,51 @@ def hears():
     #       For more info: https://api.slack.com/events/url_verification
     # ================================================= #
     if "challenge" in slack_event:
-        return make_response(slack_event["challenge"], 200, {"content_type":"application/json"})
+        return make_response(slack_event["challenge"], 200, {"content_type": "application/json"})
+
 
 @app.route('/test', methods=['POST'])
 def send_button():
     payload = {
         "text": "Would you like to play a game?",
-        "attachments": 
-        [{
-            "text": "Choose a game to play",
-            "fallback": "You are unable to choose a game",
-            "callback_id": "wopr_game",
-            "color": "#3AA3E3",
-            "attachment_type": "default",
-            "actions":
+        "attachments":
             [{
-                "name": "game",
-                "text": "Chess",
-                "type": "button",
-                "value": "chess"
-            },
-            {
-                "name": "game",
-                "text": "Falken's Maze",
-                "type": "button",
-                "value": "maze"
-            },
-            {
-                "name": "game",
-                "text": "Thermonuclear War",
-                "style": "danger",
-                "type": "button",
-                "value": "war",
-                "confirm": 
-                {
-                    "title": "Are you sure?",
-                    "text": "Wouldn't you prefer a good game of chess?",
-                    "ok_text": "Yes",
-                    "dismiss_text": "No"
-                }
+                "text": "Choose a game to play",
+                "fallback": "You are unable to choose a game",
+                "callback_id": "wopr_game",
+                "color": "#3AA3E3",
+                "attachment_type": "default",
+                "actions":
+                    [{
+                        "name": "game",
+                        "text": "Chess",
+                        "type": "button",
+                        "value": "chess"
+                    },
+                        {
+                            "name": "game",
+                            "text": "Falken's Maze",
+                            "type": "button",
+                            "value": "maze"
+                        },
+                        {
+                            "name": "game",
+                            "text": "Thermonuclear War",
+                            "style": "danger",
+                            "type": "button",
+                            "value": "war",
+                            "confirm":
+                                {
+                                    "title": "Are you sure?",
+                                    "text": "Wouldn't you prefer a good game of chess?",
+                                    "ok_text": "Yes",
+                                    "dismiss_text": "No"
+                                }
+                        }]
             }]
-        }]
     }
-    return jsonify(text)
+    return jsonify(payload)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
