@@ -1,7 +1,15 @@
 from flask import Flask, request, jsonify
-import os
+import subprocess
 
 app = Flask(__name__)
+
+
+# List of allowed channels to use the commands
+allowed_channels = {'test'}
+
+
+def granted_channel(channel):
+    return channel in allowed_channels
 
 @app.route('/')
 def hello():
@@ -11,6 +19,22 @@ def hello():
 def hello_name():
     text = request.form["text"]
     return "*" + text + "*"
+
+
+@app.route('/command', methods=['POST'])
+def execute_command():
+    slack_event = request.form
+    if granted_channel(slack_event['channel_name']):
+        command_raw = slack_event['text'].split()
+        command = command_raw[0]
+        args = ' '.join(str(item) for item in command_raw[1:])
+        process = subprocess.Popen([command, args], stdout=subprocess.PIPE, universal_newlines=True)
+        output = ''
+        for line in process.stdout:
+            output = output + line
+        return command + ' ' + args + '\n' + output.rstrip('\n')
+    else:
+        return 'You are not allowed to use commands'
 
 
 @app.route('/listening', methods=['POST'])
