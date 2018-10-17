@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import subprocess
+import jira
 
 app = Flask(__name__)
 
@@ -18,7 +19,21 @@ def hello():
 @app.route('/message', methods=['POST'])
 def hello_name():
     text = request.form["text"]
-    return "*" + text + "*"
+    return "*" + text + "*" + request.form["user_name"]
+
+
+@app.route('/ticket', methods=['POST'])
+def ticket():
+    slack_event = request.form
+    if granted_channel(slack_event['channel_name']):
+        user_name = slack_event["user_name"]
+        command_raw = slack_event['text'].split('"')
+        issue_type = command_raw[1]
+        summary = command_raw[3]
+        ticket = jira.create_ticket(user_name, summary, issue_type)
+        return ticket
+    else:
+        return 'You are not allowed to use commands'
 
 
 @app.route('/command', methods=['POST'])
