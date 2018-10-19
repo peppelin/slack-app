@@ -25,6 +25,7 @@ docker-compose up -d
 .
 ├── app
 │   ├── app.py
+│   ├── jia.pi
 │   └── requirements.txt
 ├── docker-compose.yml
 ├── Dockerfile
@@ -42,6 +43,7 @@ Configure the slash commands [here](https://api.slack.com/slash-commands)
 
 * **/message** endpoint: gets the text and returns it in *bold*.
 * **/command** endpoint: launches a command passed as an argument.
+* **/ticket** endpont: creates a ticket in Internal support.
 * **/test** endpoint: send a basic button message.
 * **/listening** endpoint: gather the challenge when subscribing to events. [Event subscription](https://api.slack.com/events/url_verification)
 

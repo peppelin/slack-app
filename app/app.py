@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify
 import subprocess
 import jira
+import sys, os
 
 app = Flask(__name__)
 
 
 # List of allowed channels to use the commands
-allowed_channels = {'test'}
+allowed_channels = {'test', 'support'}
 
 
 def granted_channel(channel):
@@ -22,16 +23,25 @@ def hello_name():
     return "*" + text + "*" + request.form["user_name"]
 
 
+
+
 @app.route('/ticket', methods=['POST'])
+# ================================================= #
+#    This route listens for slack command /ticket and creates the ticket in Internal Support
+#    Uses the username who launched the command to raise the ticket in his name.
+# ================================================= #
+
 def ticket():
     slack_event = request.form
     if granted_channel(slack_event['channel_name']):
+        atlassian_url = os.environ['ATLASSIAN_URL'] + '/servicedesk/customer/portal/4/'
         user_name = slack_event["user_name"]
         command_raw = slack_event['text'].split('"')
-        issue_type = command_raw[1]
-        summary = command_raw[3]
-        ticket = jira.create_ticket(user_name, summary, issue_type)
-        return ticket
+        summary = command_raw[1]
+        ticket = jira.create_ticket(user_name, summary)
+        print(ticket, file=sys.stderr)
+        print(ticket['key'], file=sys.stderr)
+        return atlassian_url + ticket['key']
     else:
         return 'You are not allowed to use commands'
 

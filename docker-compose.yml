@@ -3,6 +3,9 @@ services:
   web:
     build: .
     environment:
-        - SLACK_URL=$SLACK_URL
+        - SLACK_URL=${SLACK_URL}
+        - ATLASSIAN_TOKEN=${ATLASSIAN_TOKEN}
+        - ATLASSIAN_URL=${ATLASSIAN_URL}
+        - ATLASSIAN_USERNAME=${ATLASSIAN_USERNAME}
     ports:
      - "5000:5000"
