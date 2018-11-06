@@ -25,7 +25,7 @@ docker-compose up -d
 .
 ├── app
 │   ├── app.py
-│   ├── jia.pi
+│   ├── jira.py
 │   └── requirements.txt
 ├── docker-compose.yml
 ├── Dockerfile
