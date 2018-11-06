@@ -25,16 +25,24 @@ docker-compose up -d
 .
 ├── app
 │   ├── app.py
+│   ├── jira.py
 │   └── requirements.txt
 ├── docker-compose.yml
 ├── Dockerfile
 └── README.md
 ```
-
 In the root folder, there's the docker-compose.yml file and the Dockerfile to build the slack-app with Flask.
 * Mounts the app volume inside the docker container
 * Exposes the port *5000* for the flask app.
 In the app folder, you'll find the main python scripts to run Flask API and the requirements.txt for pip installation.
+
+## Requirements
+
+The host needs 4 env vars to work properli:
+* **SLACK_URL**: The url for the slack webhook.
+* **ATLASSIAN_TOKEN**: your access token from atlassian. [Atlassian token](https://id.atlassian.com/manage/api-tokens)
+* **ATLASSIAN_USERNAME**: the username for the given token.
+* **ATLASSIAN_URL**: your atlassian main url. *Example: https://my-atlassian.atlassian.net*
 
 ## Usage example
 
@@ -42,6 +50,7 @@ Configure the slash commands [here](https://api.slack.com/slash-commands)
 
 * **/message** endpoint: gets the text and returns it in *bold*.
 * **/command** endpoint: launches a command passed as an argument.
+* **/ticket** endpoint: creates a ticket in Internal support.
 * **/test** endpoint: send a basic button message.
 * **/listening** endpoint: gather the challenge when subscribing to events. [Event subscription](https://api.slack.com/events/url_verification)
 
@@ -51,6 +60,9 @@ Be sure to have installed docker and docker-compose.
 The images python:alpine are being used for building the app.
 
 ## Release History
+
+* 0.0.2
+    * Basic integration with jira (ticket creation).
 
 * 0.0.1
     * Work in progress
